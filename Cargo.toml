@@ -1,4 +1,5 @@
 [package]
+authors = ["Abdalrzag Eisa <bmjfdrh@gmail.com>"]
 name = "rcat"
 version = "0.1.0"
 edition = "2021"
@@ -6,3 +7,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+clap = { version = "3.2.8", features = ["derive"] }
