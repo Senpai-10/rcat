@@ -1,11 +1,11 @@
 use clap::Parser;
 
-/// rcat my implementation of gnu cat in rust
-/// ------------------------------------------
-/// Github: https://github.com/senpai-10
+/// my implementation of gnu cat in rust
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
-#[clap(propagate_version = true)]
 pub struct RcatArgs {
     pub paths: Vec<String>,
+
+    #[clap(short, long, help = "number all output lines")]
+    pub number: bool
 }
