@@ -4,7 +4,6 @@ use std::{path::Path, panic};
 use args::RcatArgs;
 use clap::Parser;
 use std::fs::File;
-use std::io::prelude::*;
 
 fn main() {
     let cli = RcatArgs::parse();
