@@ -29,14 +29,14 @@ fn main() {
         for (index, line) in content.lines().enumerate() {
             let line_number = index + 1;
 
-            println!("{}{} │ {}", padding_space(&line_number, &max_lines_number), line_number, line);
+            println!("{}{} │ {}", padding_line_number(&line_number, &max_lines_number), line_number, line);
         }
         
         println!("{}─┴────────{}", dash_padding, path_padding);
     }
 }
 
-fn padding_space(line_number: &usize, max_lines_number: &usize) -> String {
+fn padding_line_number(line_number: &usize, max_lines_number: &usize) -> String {
     let line_number_length = get_number_length(line_number);
     let max_lines_number_length = get_number_length(max_lines_number);
 
