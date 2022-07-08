@@ -15,20 +15,24 @@ fn main() {
 
         let content = get_file_content(&mut file);
 
+        // max number of lines in the file content
+        let max_lines_number: usize = content.lines().count();
+        let max_lines_number_length = get_number_length(&max_lines_number);
+        let empty_padding = " ".repeat(max_lines_number_length);
+        let dash_padding = "─".repeat(max_lines_number_length);
+        let path_padding = "─".repeat(path.chars().count());
+
+        println!("{}─┬────────{}┐", dash_padding, path_padding);
+        println!("{} │ File: {} │", empty_padding, path);
+        println!("{}─┼────────{}┘", dash_padding, path_padding);
+
         for (index, line) in content.lines().enumerate() {
-            if cli.number {
+            let line_number = index + 1;
 
-                let line_number = index + 1;
-
-                // max number of lines in the file content
-                let max_lines_number: usize = content.lines().count();
-
-                println!("{}{}| {}", padding_space(&line_number, &max_lines_number), line_number, line);
-            }
-            else {
-                println!("{}", line);
-            }
+            println!("{}{} │ {}", padding_space(&line_number, &max_lines_number), line_number, line);
         }
+        
+        println!("{}─┴────────{}", dash_padding, path_padding);
     }
 }
 
