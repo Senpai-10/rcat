@@ -7,5 +7,8 @@ pub struct RcatArgs {
     pub paths: Vec<String>,
 
     #[clap(short, long, help = "number all output lines")]
-    pub number: bool
+    pub number: bool,
+
+    #[clap(short, long, help = "clean output no filename or line numbers")]
+    pub clean: bool
 }
