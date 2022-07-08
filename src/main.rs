@@ -1,6 +1,6 @@
 mod args;
 
-use std::{path::Path, panic};
+use std::{path::Path, panic, io::Read};
 use args::RcatArgs;
 use clap::Parser;
 use std::fs::File;
@@ -11,14 +11,44 @@ fn main() {
     check_paths(&cli.paths);
 
     for path in cli.paths.iter() {
-        let stdout = std::io::stdout();
-        let mut handle = stdout.lock();
+        let mut file = File::open(path).unwrap();
 
-        match File::open(path).and_then(|mut file| std::io::copy(&mut file, &mut handle)) {
-            Err(err) => eprintln!("{}", err),
-            _ => (),
+        let content = get_file_content(&mut file);
+
+        for (index, line) in content.lines().enumerate() {
+            if cli.number {
+
+                let line_number = index + 1;
+
+                // max number of lines in the file content
+                let max_lines_number: usize = content.lines().count();
+
+                println!("{}{}| {}", padding_space(&line_number, &max_lines_number), line_number, line);
+            }
+            else {
+                println!("{}", line);
+            }
         }
     }
+}
+
+fn padding_space(line_number: &usize, max_lines_number: &usize) -> String {
+    let line_number_length = get_number_length(line_number);
+    let max_lines_number_length = get_number_length(max_lines_number);
+
+    String::from(" ".repeat(max_lines_number_length - line_number_length))
+}
+
+fn get_number_length(number: &usize) -> usize {
+    number.to_string().chars().count()
+}
+
+fn get_file_content(file: &mut File) -> String {
+    let mut content = String::new();
+
+    file.read_to_string(&mut content).unwrap();
+
+    content    
 }
 
 /// Check if file exists
