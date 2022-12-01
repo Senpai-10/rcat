@@ -5,4 +5,7 @@ use clap::Parser;
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
     pub paths: Vec<String>,
+
+    #[clap(short, long)]
+    pub numbers: bool
 }
