@@ -3,9 +3,30 @@ use clap::Parser;
 /// my implementation of gnu cat in rust
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
-pub struct RcatArgs {
+pub struct Args {
     pub paths: Vec<String>,
 
-    #[clap(short, long, help = "clean output no filename or line numbers")]
-    pub clean: bool
+    /// Show line numbers
+    #[clap(short, long)]
+    pub numbers: bool,
+
+    /// Ignore path if not found or is a directory
+    #[clap(short, long)]
+    pub skip: bool,
+
+    /// Print filename before printing contents
+    #[clap(short, long)]
+    pub print_filename: bool,
+
+    /// Print filename as absolute path
+    #[clap(short, long)]
+    pub absolute_path: bool,
+
+    /// Add a separater between files
+    #[clap(long)]
+    pub sep: bool,
+
+    /// Separater to use between files
+    #[clap(long, default_value = "")]
+    pub sep_v: String,
 }

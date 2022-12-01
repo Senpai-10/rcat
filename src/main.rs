@@ -1,88 +1,84 @@
 mod args;
 
-use std::{path::Path, panic, io::Read};
-use args::RcatArgs;
+use args::Args;
 use clap::Parser;
-use std::fs::File;
+use colored::Colorize;
+use std::{fs::File, io::Read};
 
 fn main() {
-    let cli = RcatArgs::parse();
-
-    check_paths(&cli.paths);
+    let cli = Args::parse();
 
     for path in cli.paths.iter() {
-        let mut file = File::open(path).unwrap();
+        let mut file = match File::open(path) {
+            Ok(c) => c,
+            Err(e) => {
+                if cli.skip {
+                    continue;
+                }
 
-        let content = get_file_content(&mut file);
+                println!("'{}' {}", path, e);
+                continue;
+            }
+        };
 
-        if cli.clean {
-            println!("{}", content);
-            continue;
+        let mut contents = String::new();
+
+        match file.read_to_string(&mut contents) {
+            Err(e) => {
+                if cli.skip {
+                    continue;
+                }
+
+                println!("Error: '{}' {}", path, e.kind());
+                continue;
+            }
+            _ => {}
+        };
+
+        if cli.sep {
+            println!("{}", cli.sep_v);
         }
 
-        // max number of lines in the file content
-        let max_lines_number: usize = content.lines().count();
-        let max_lines_number_length = get_number_length(&max_lines_number);
-        let empty_padding = " ".repeat(max_lines_number_length);
-        let dash_padding = "─".repeat(max_lines_number_length);
-        let path_padding = "─".repeat(path.chars().count());
+        if cli.print_filename {
+            if cli.absolute_path {
+                let pathbuf = std::path::PathBuf::from(path);
+                let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
 
-        println!("{}──┬────────{}┐", dash_padding, path_padding);
-        println!("{}  │ File: {} │", empty_padding, path);
-        println!("{}──┼────────{}┘", dash_padding, path_padding);
-
-        for (index, line) in content.lines().enumerate() {
-            let line_number = index + 1;
-
-            println!(" {}{} │ {}", padding_line_number(&line_number, &max_lines_number), line_number, line);
+                println!("file: {}", abs_path.to_str().unwrap());
+            } else {
+                println!("file: {}", path);
+            }
         }
-        
-        println!("{}──┴────────{}", dash_padding, path_padding);
+
+        if cli.numbers {
+            let max_lines_number: usize = contents.lines().count();
+
+            for (index, line) in contents.lines().enumerate() {
+                let line_number = index + 1;
+
+                println!(
+                    "{line_number} {line}",
+                    line_number = pad_line_number(&line_number, &max_lines_number),
+                    line = line
+                );
+            }
+        } else {
+            println!("{}", contents);
+        }
     }
 }
 
-fn padding_line_number(line_number: &usize, max_lines_number: &usize) -> String {
-    let line_number_length = get_number_length(line_number);
-    let max_lines_number_length = get_number_length(max_lines_number);
+fn pad_line_number(number: &usize, max_number: &usize) -> String {
+    let number_length = get_number_length(number);
+    let max_number_length = get_number_length(max_number);
 
-    String::from(" ".repeat(max_lines_number_length - line_number_length))
+    format!(
+        "{}{}",
+        " ".repeat(max_number_length - number_length),
+        number.to_string().black()
+    )
 }
 
-fn get_number_length(number: &usize) -> usize {
-    number.to_string().chars().count()
-}
-
-fn get_file_content(file: &mut File) -> String {
-    let mut content = String::new();
-
-    file.read_to_string(&mut content).unwrap();
-
-    content    
-}
-
-/// Check if file exists
-fn file_exists(path: &String) -> bool {
-    if !Path::new(path).exists() {
-        panic!("'{}': No such file or directory", path)
-    }
-
-    true
-}
-
-/// Check if path is path of a file
-fn is_a_file(path: &String) -> bool {
-    if ! Path::new(path).is_file() {
-        panic!("'{}': Is a directory", path)
-    }
-
-    true
-}
-
-/// Check if paths is not a file or doesn't exists
-/// before reading them.
-fn check_paths(paths: &Vec<String>) -> () {
-    for path in paths.iter() {
-        file_exists(&path);
-        is_a_file(&path);
-    }
+fn get_number_length(n: &usize) -> usize {
+    n.to_string().chars().count()
 }
