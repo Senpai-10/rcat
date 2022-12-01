@@ -20,13 +20,13 @@ pub struct Args {
 
     /// Print filename as absolute path
     #[clap(short, long)]
-    pub print_absolute_path: bool,
+    pub absolute_path: bool,
 
     /// Add a separater between files
-    #[clap(short, long)]
+    #[clap(long)]
     pub sep: bool,
 
     /// Separater to use between files
-    #[clap(short, long)]
-    pub sep_v: Option<String>,
+    #[clap(long, default_value = "")]
+    pub sep_v: String,
 }

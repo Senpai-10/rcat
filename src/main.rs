@@ -34,6 +34,21 @@ fn main() {
             _ => {}
         };
 
+        if cli.sep {
+            println!("{}", cli.sep_v);
+        }
+
+        if cli.print_filename {
+            if cli.absolute_path {
+                let pathbuf = std::path::PathBuf::from(path);
+                let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
+
+                println!("file: {}", abs_path.to_str().unwrap());
+            } else {
+                println!("file: {}", path);
+            }
+        }
+
         if cli.numbers {
             let max_lines_number: usize = contents.lines().count();
 
