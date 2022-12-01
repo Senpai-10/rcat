@@ -8,8 +8,6 @@ fn main() {
     let cli = Args::parse();
 
     for path in cli.paths.iter() {
-        // TODO: Check if path is not a file
-
         let mut file = match File::open(path) {
             Ok(c) => c,
             Err(e) => {
