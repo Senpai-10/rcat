@@ -16,26 +16,34 @@ fn main() {
         file.read_to_string(&mut content).unwrap();
 
         if cli.numbers {
+            let max_lines_number: usize = content.lines().count();
+
             for (index, line) in content.lines().enumerate() {
-                println!("{line_number} {line}",
-                    line_number = index + 1,
+                let line_number = index + 1;
+
+                println!(
+                    "{line_number} {line}",
+                    line_number = pad_line_number(&line_number, &max_lines_number),
                     line = line
                 );
             }
-
         } else {
             println!("{}", content);
         }
     }
 }
 
-// fn padding_line_number(line_number: &usize, max_lines_number: &usize) -> String {
-//     let line_number_length = get_number_length(line_number);
-//     let max_lines_number_length = get_number_length(max_lines_number);
+fn pad_line_number(number: &usize, max_number: &usize) -> String {
+    let number_length = get_number_length(number);
+    let max_number_length = get_number_length(max_number);
 
-//     String::from(" ".repeat(max_lines_number_length - line_number_length))
-// }
+    format!(
+        "{}{}",
+        " ".repeat(max_number_length - number_length),
+        number
+    )
+}
 
-// fn get_number_length(number: &usize) -> usize {
-//     number.to_string().chars().count()
-// }
+fn get_number_length(n: &usize) -> usize {
+    n.to_string().chars().count()
+}
