@@ -2,7 +2,7 @@ mod args;
 
 use args::Args;
 use clap::Parser;
-use std::fs::File;
+use std::{fs::File, io::Read};
 
 fn main() {
     let cli = Args::parse();
@@ -11,8 +11,11 @@ fn main() {
         // TODO: Check if path is not a file
 
         let mut file = File::open(path).unwrap();
+        let mut content = String::new();
 
-        println!("hi");
+        file.read_to_string(&mut content).unwrap();
+
+        println!("{}", content);
     }
 }
 
