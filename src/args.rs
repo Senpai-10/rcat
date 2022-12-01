@@ -8,5 +8,9 @@ pub struct Args {
 
     /// Show line numbers
     #[clap(short, long)]
-    pub numbers: bool
+    pub numbers: bool,
+
+    /// Ignore path if not found or is a directory
+    #[clap(short, long)]
+    pub skip: bool,
 }
