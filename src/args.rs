@@ -6,6 +6,7 @@ use clap::Parser;
 pub struct Args {
     pub paths: Vec<String>,
 
+    /// Show line numbers
     #[clap(short, long)]
     pub numbers: bool
 }
