@@ -2,6 +2,7 @@ mod args;
 
 use args::Args;
 use clap::Parser;
+use colored::Colorize;
 use std::{fs::File, io::Read};
 
 fn main() {
@@ -74,7 +75,7 @@ fn pad_line_number(number: &usize, max_number: &usize) -> String {
     format!(
         "{}{}",
         " ".repeat(max_number_length - number_length),
-        number
+        number.to_string().black()
     )
 }
 
