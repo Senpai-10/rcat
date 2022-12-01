@@ -15,7 +15,17 @@ fn main() {
 
         file.read_to_string(&mut content).unwrap();
 
-        println!("{}", content);
+        if cli.numbers {
+            for (index, line) in content.lines().enumerate() {
+                println!("{line_number} {line}",
+                    line_number = index + 1,
+                    line = line
+                );
+            }
+
+        } else {
+            println!("{}", content);
+        }
     }
 }
 
