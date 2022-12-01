@@ -29,5 +29,4 @@ pub struct Args {
     /// Separater to use between files
     #[clap(short, long)]
     pub sep_v: Option<String>,
-
 }
