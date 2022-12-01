@@ -13,6 +13,10 @@ fn main() {
         let mut file = match File::open(path) {
             Ok(c) => c,
             Err(e) => {
+                if cli.skip {
+                    continue;
+                }
+
                 println!("'{}' {}", path, e);
                 continue;
             }
@@ -22,9 +26,12 @@ fn main() {
 
         match file.read_to_string(&mut contents) {
             Err(e) => {
+                if cli.skip {
+                    continue;
+                }
+
                 println!("Error: '{}' {}", path, e.kind());
                 continue;
-
             }
             _ => {}
         };
