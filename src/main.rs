@@ -11,14 +11,14 @@ fn main() {
         // TODO: Check if path is not a file
 
         let mut file = File::open(path).unwrap();
-        let mut content = String::new();
+        let mut contents = String::new();
 
-        file.read_to_string(&mut content).unwrap();
+        file.read_to_string(&mut contents).unwrap();
 
         if cli.numbers {
-            let max_lines_number: usize = content.lines().count();
+            let max_lines_number: usize = contents.lines().count();
 
-            for (index, line) in content.lines().enumerate() {
+            for (index, line) in contents.lines().enumerate() {
                 let line_number = index + 1;
 
                 println!(
@@ -28,7 +28,7 @@ fn main() {
                 );
             }
         } else {
-            println!("{}", content);
+            println!("{}", contents);
         }
     }
 }
