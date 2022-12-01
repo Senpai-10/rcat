@@ -2,7 +2,7 @@ mod args;
 
 use args::Args;
 use clap::Parser;
-use std::{fs::File, io::{Read, ErrorKind}};
+use std::{fs::File, io::Read};
 
 fn main() {
     let cli = Args::parse();
