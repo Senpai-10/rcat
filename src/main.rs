@@ -2,7 +2,7 @@ mod args;
 
 use args::Args;
 use clap::Parser;
-use std::{fs::File, io::Read};
+use std::{fs::File, io::{Read, ErrorKind}};
 
 fn main() {
     let cli = Args::parse();
@@ -10,10 +10,24 @@ fn main() {
     for path in cli.paths.iter() {
         // TODO: Check if path is not a file
 
-        let mut file = File::open(path).unwrap();
+        let mut file = match File::open(path) {
+            Ok(c) => c,
+            Err(e) => {
+                println!("'{}' {}", path, e);
+                continue;
+            }
+        };
+
         let mut contents = String::new();
 
-        file.read_to_string(&mut contents).unwrap();
+        match file.read_to_string(&mut contents) {
+            Err(e) => {
+                println!("Error: '{}' {}", path, e.kind());
+                continue;
+
+            }
+            _ => {}
+        };
 
         if cli.numbers {
             let max_lines_number: usize = contents.lines().count();
