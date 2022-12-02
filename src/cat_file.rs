@@ -3,19 +3,16 @@ use colored::Colorize;
 
 pub fn cat_file(filename: &String, contents: String, cli: &Args) -> () {
     if is_atty() {
-        if cli.sep {
-            println!("{}", cli.sep_v);
-        }
+        if cli.absolute_path {
+            let pathbuf = std::path::PathBuf::from(filename);
+            let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
 
-        if cli.print_filename {
-            if cli.absolute_path {
-                let pathbuf = std::path::PathBuf::from(filename);
-                let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
-
-                println!("File: {}", abs_path.to_str().unwrap().bright_yellow().bold());
-            } else {
-                println!("File: {}", filename.bright_yellow().bold());
-            }
+            println!(
+                "File: {}",
+                abs_path.to_str().unwrap().bright_yellow().bold()
+            );
+        } else {
+            println!("File: {}", filename.bright_yellow().bold());
         }
     }
 
@@ -32,6 +29,8 @@ pub fn cat_file(filename: &String, contents: String, cli: &Args) -> () {
                 line = line
             );
         }
+
+        println!();
     } else {
         println!("{}", contents);
     }
