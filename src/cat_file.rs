@@ -12,9 +12,9 @@ pub fn cat_file(filename: &String, contents: String, cli: &Args) -> () {
                 let pathbuf = std::path::PathBuf::from(filename);
                 let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
 
-                println!("file: {}", abs_path.to_str().unwrap());
+                println!("File: {}", abs_path.to_str().unwrap().bright_yellow());
             } else {
-                println!("file: {}", filename);
+                println!("File: {}", filename.bright_yellow());
             }
         }
     }
