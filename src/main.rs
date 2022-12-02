@@ -50,7 +50,8 @@ fn main() {
             }
         }
 
-        if cli.numbers {
+        // Only display line numbers if printing to tty
+        if cli.numbers && atty::is(atty::Stream::Stdout) {
             let max_lines_number: usize = contents.lines().count();
 
             for (index, line) in contents.lines().enumerate() {
