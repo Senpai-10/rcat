@@ -35,23 +35,25 @@ fn main() {
             _ => {}
         };
 
-        if cli.sep {
-            println!("{}", cli.sep_v);
-        }
+        if is_atty() {
+            if cli.sep {
+                println!("{}", cli.sep_v);
+            }
 
-        if cli.print_filename {
-            if cli.absolute_path {
-                let pathbuf = std::path::PathBuf::from(path);
-                let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
+            if cli.print_filename {
+                if cli.absolute_path {
+                    let pathbuf = std::path::PathBuf::from(path);
+                    let abs_path = std::fs::canonicalize(&pathbuf).unwrap();
 
-                println!("file: {}", abs_path.to_str().unwrap());
-            } else {
-                println!("file: {}", path);
+                    println!("file: {}", abs_path.to_str().unwrap());
+                } else {
+                    println!("file: {}", path);
+                }
             }
         }
 
         // Only display line numbers if printing to tty
-        if cli.numbers && atty::is(atty::Stream::Stdout) {
+        if cli.numbers && is_atty() {
             let max_lines_number: usize = contents.lines().count();
 
             for (index, line) in contents.lines().enumerate() {
@@ -82,4 +84,12 @@ fn pad_line_number(number: &usize, max_number: &usize) -> String {
 
 fn get_number_length(n: &usize) -> usize {
     n.to_string().chars().count()
+}
+
+fn is_atty() -> bool {
+    if atty::isnt(atty::Stream::Stdout) {
+        return false;
+    }
+
+    return true;
 }
